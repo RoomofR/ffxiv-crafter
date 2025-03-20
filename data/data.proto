@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+message RecipeItem{
+	int32 id = 1;
+	int32 qty = 2;
+	optional int32 bonusQuality = 3;
+}
+
+message Recipe{
+	
+	/*
+		jobId Definitions
+		0 CPR
+		1 BSM
+		2 ARM
+		3 GSM
+		4 LTW
+		5 WVR
+		6 ALC
+		7 CPR
+	*/
+	int32 rlvl = 1;
+	int32 job = 2;
+	int32 requiredCraftsmanship = 7;
+	int32 requiredControl = 8;
+	RecipeItem outputItem = 9;
+	repeated RecipeItem inputItems = 10;
+}
+
+message Item{
+	int32 id = 1;
+	string name = 2;
+	int32 iLvl = 3;
+	int32 classJobCategory = 4;
+	repeated Recipe recipes = 5;
+}
+
+message ItemData{
+	string version = 1;
+	map<int32, Item> items = 2;
+}
