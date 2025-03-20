@@ -5,7 +5,7 @@ protobuf.load("./data/data.proto", (err,root)=>{
 	var ItemDataMessege = root.lookupType("ItemData");
 	let start = performance.now();
 	let protoStart = performance.now();
-	fetch("./data/Items.protobuf")
+	fetch("./data/ItemData_2025.02.27.0000.0000.protobuf")
 		.then(response => {
 			console.log(`Fetch time: ${performance.now() - start} ms`)
 			start = performance.now();
