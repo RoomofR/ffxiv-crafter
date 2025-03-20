@@ -19,7 +19,12 @@ body{
 	overflow: hidden;
 }
 
+#itemList{
+	grid-area: list;
+}
+
 .addBtn:hover{
 	text-decoration: underline;
 	cursor: pointer;
+	user-select: none;
 }

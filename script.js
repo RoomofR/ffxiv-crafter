@@ -1,5 +1,5 @@
 //===========================================================================
-const FFXIV_VERSION = "2025.02.27.0000.0000_1";
+const FFXIV_VERSION = "2025.02.27.0000.0000_2";
 console.log(`FFXIV Crafter for FFXIV Data version ${FFXIV_VERSION}`, "meow");
 //===========================================================================
 
@@ -10,10 +10,14 @@ console.log(ItemData.classJobCategory)
 //== View Variables =========================================================
 let searchString = "";
 let searchResults = [];
+let itemList = {};
+let itemListCode = "";
 
 //== View ===================================================================
-var root = document.getElementById("app");
-m.mount(root,{
+var root = document.body;
+
+//Search Bar
+var SearchBarComponent = {
 	view: ()=>{
 		return m("div", {id: "searchBox"},
 		[
@@ -27,6 +31,50 @@ m.mount(root,{
 					m("td", {class: "addBtn", onclick: ()=>{addItem(item.id)}} ,"[+]")
 				])
 			)),
+		]);
+	}
+}
+
+//Item List
+var ItemListComponent = {
+	view: ()=>{
+		return m("div", {id: "itemList"},
+		[
+			m("h6","Item List"),
+			m("div", Object.keys(itemList).flatMap(item_id => {
+				let item = ItemData.items[item_id];
+				//Item without recipe
+				if(item.recipes.length == 0){
+					return [
+						m("div", `[${item_id}] ${ItemData.items[item_id].name} = ${itemList[item_id]}`)
+					]
+				}
+
+				//Item with recipe
+				return [
+					m("div", `[${item_id}] ${ItemData.items[item_id].name} = ${itemList[item_id]}`),
+					m("div", {style: "margin-left: 15px;"},`↪ ${ItemData.items[item_id].recipes[0].progress}ℙ ${ItemData.items[item_id].recipes[0].quality}𝑸 ${ItemData.items[item_id].recipes[0].durability}ᴰ`),
+					
+
+					m("div", {style: "margin-left: 25px;"}, ItemData.items[item_id].recipes[0].inputItems.filter(input_item => input_item.bonusQuality > 0).map(input_item => 
+						m("div", `${input_item.id} ${input_item.qty} ${input_item.bonusQuality || ""}`)
+					))
+				]
+			}
+				
+			)),
+			m("code", itemListCode),
+		]);
+	}
+}
+
+//App
+m.mount(root,{
+	view: ()=>{
+		return m("div", {id: "app"},
+		[
+			m(SearchBarComponent),
+			m(ItemListComponent),
 		]);
 	}
 });
@@ -64,8 +112,16 @@ function searchItems(){
 	m.redraw();
 }
 
-function addItem(item){
-	console.log("adding",item)
+function addItem(item_id){
+	console.log("adding",item_id)
+
+	if(item_id in itemList){
+		itemList[item_id]++;
+	}else{
+		itemList[item_id] = 1;
+	}
+
+	itemListCode = Object.keys(itemList).map(id=>`${id},${itemList[id]};`).join("")
 }
 
 //== Functions ==============================================================

@@ -23,8 +23,11 @@ message Recipe{
 	int32 job = 2;
 	int32 requiredCraftsmanship = 7;
 	int32 requiredControl = 8;
-	RecipeItem outputItem = 9;
-	repeated RecipeItem inputItems = 10;
+	int32 progress = 9;
+	int32 quality = 10;
+	int32 durability = 11;
+	RecipeItem outputItem = 12;
+	repeated RecipeItem inputItems = 13;
 }
 
 message Item{
