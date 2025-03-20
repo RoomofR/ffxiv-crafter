@@ -1,10 +1,11 @@
 //===========================================================================
-const FFXIV_VERSION = "2025.02.27.0000.0000";
+const FFXIV_VERSION = "2025.02.27.0000.0000_1";
 console.log(`FFXIV Crafter for FFXIV Data version ${FFXIV_VERSION}`, "meow");
 //===========================================================================
 
 const ItemData = await getFFXIVItemData(FFXIV_VERSION);
 const Items_Keys = Object.keys(ItemData.items)
+console.log(ItemData.classJobCategory)
 
 //== View Variables =========================================================
 let searchString = "";
@@ -21,6 +22,7 @@ m.mount(root,{
 			m("table", searchResults.map(item =>
 				m("tr",[
 					m("td", item.id),
+					m("td", item.classJobCategory),
 					m("td", item.name),
 					m("td", {class: "addBtn", onclick: ()=>{addItem(item.id)}} ,"[+]")
 				])

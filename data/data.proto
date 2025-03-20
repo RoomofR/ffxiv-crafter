@@ -38,4 +38,5 @@ message Item{
 message ItemData{
 	string version = 1;
 	map<int32, Item> items = 2;
+	map<int32, string> classJobCategory = 3;
 }
