@@ -39,7 +39,23 @@ body{
 	user-select: none;
 }
 
-.itemNameComponent > *{
+.inline > * {
 	display: inline-block;
 	width:auto;
+}
+
+.loader {
+  font-family: 'Inconsolata', monospace;
+}
+
+.loader::before { /*Inspired from liam newmarch and 6's braille loader*/
+  animation: braille .4s linear 0s infinite;
+  content: '⠏';
+}
+
+@keyframes braille {
+   0% { content: '⠏' }
+  25% { content: '⠹' }
+  50% { content: '⠼' }
+  75% { content: '⠧' }
 }

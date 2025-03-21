@@ -25,7 +25,12 @@ var SearchBarComponent = {
 			m("label", {for: "search_text_box"},`Search (${searchResults.length})`),
 			m("input", {id: "search_text_box", type: "text", onkeyup: onSearchKey}),
 			m("table", searchResults.map(item => {
-				if(item.id == "no results found") return m("tr",m("td",`No Results Found! Took ${item.time}ms.`));
+				if(item.event == "no results found") return m("tr",m("td",`No Results Found! Took ${item.time}ms.`));
+
+				if(item.event == "loading") return m("tr", m("td", {class:"inline"}, [
+						m("div",{class:"loader"},""),
+						m("div",{style: "margin-left: 5px;"}, `Searching for items using "${searchString}" terms.`)
+					]))
 
 				return m("tr",[
 					m("td", item.id),
@@ -49,7 +54,7 @@ var ItemListComponent = {
 			m("div", Object.keys(itemList).flatMap(item_id => {
 				let item = ItemData.items[item_id];
 
-				let itemNameComponent = m("div",{class:"itemNameComponent"}, [
+				let itemNameComponent = m("div",{class:"inline"}, [
 						m("div",`[${item_id}] ${ItemData.items[item_id].name} = ${itemList[item_id]}`),
 						m("div",{class:"removeBtn", onclick: ()=>{removeItem(item_id)}},`[-]`),
 					]);
@@ -96,7 +101,12 @@ let searchBarTimout = null;
 function onSearchKey(event){
 	searchString = event.target.value;
 	clearTimeout(searchBarTimout);
-	searchBarTimout = setTimeout(searchItems, 1000);
+
+	searchResults = (searchString == "") ? [] : [{
+			event: "loading"
+		}];
+
+	searchBarTimout = setTimeout(searchItems, 200);
 }
 
 const MAX_SEARCH_RESULTS = 50;
@@ -135,7 +145,7 @@ function searchItems(){
 
 	if(result_count == 0){
 		searchResults.push({
-			id: "no results found",
+			event: "no results found",
 			time: queryTime
 		})
 	}
