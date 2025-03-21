@@ -28,3 +28,18 @@ body{
 	cursor: pointer;
 	user-select: none;
 }
+
+.removeBtn{
+	padding-left: 10px;
+}
+
+.removeBtn:hover{
+	text-decoration: underline;
+	cursor: pointer;
+	user-select: none;
+}
+
+.itemNameComponent > *{
+	display: inline-block;
+	width:auto;
+}

@@ -36,6 +36,7 @@ message Item{
 	int32 iLvl = 3;
 	int32 classJobCategory = 4;
 	repeated Recipe recipes = 5;
+	bool canBeHq = 6;
 }
 
 message ItemData{
