@@ -23,6 +23,16 @@ body{
 	grid-area: list;
 }
 
+#craftList{
+ 	grid-area: craft;
+}
+
+code{
+	display:inline-block;
+	max-width: 300px;
+	overflow-x: hidden;
+}
+
 .addBtn:hover{
 	text-decoration: underline;
 	cursor: pointer;
@@ -48,7 +58,7 @@ body{
   font-family: 'Inconsolata', monospace;
 }
 
-.loader::before { /*Inspired from liam newmarch and 6's braille loader*/
+.loader::before { /*From liam newmarch and 6's braille loader*/
   animation: braille .4s linear 0s infinite;
   content: '⠏';
 }
