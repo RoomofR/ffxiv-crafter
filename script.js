@@ -16,11 +16,13 @@ let CraftList = [];
 const lvl99crafted = [44022,44023,44000,44001,44011,44012,44061,44062,44033];
 const lvl100_2starmats = [44149,44147,44148,44151,44150];
 const lvl100_2_5starmats = [44847,44846];
-let calcList = calculateHQItems(ItemList, [...lvl99crafted, ...lvl100_2starmats, ...lvl100_2_5starmats], 6004);
-console.log(calcList);
-CraftList = calcList.itemsToHQ;
+//let calcList = calculateHQItems(ItemList, [...lvl99crafted, ...lvl100_2starmats, ...lvl100_2_5starmats], 6004);
+CraftList = calculateItemList(calculateHQItems(ItemList,[...lvl99crafted, ...lvl100_2starmats, ...lvl100_2_5starmats], 6004));
+console.log(CraftList);
 
 /*const manualCodeImport = "44411,1;44412,NaN;44413,1;44414,1;44415,1;44416,1;44417,1;44418,1;44419,1;44420,1;44421,1;44422,1;44423,1;44424,1;44425,1;44426,1;44427,1;44428,1;44429,1;44430,1;44431,1;44432,1;44434,1;44435,1;44436,1;44437,1;44438,1;44439,1;44440,1;44441,1;";
+*/
+/*const manualCodeImport = "44411,1;";
 ItemList = parseListCode(manualCodeImport);
 console.log(ItemList)
 updateItemList();*/
@@ -52,9 +54,7 @@ var SearchBarComponent = {
 					m("td", item.name),
 					m("td", {class: "addBtn", onclick: ()=>{addItem(item.id)}} ,"[+]")
 				])
-			}
-				
-			)),
+			})),
 		]);
 	}
 }
@@ -100,10 +100,46 @@ var ItemListComponent = {
 
 var CraftListComponent = {
 	view: ()=>{
-		console.log(CraftList);
+		let craft_category = "";
 		return m("div", {id: "craftList"},
 		[
-			m("div",CraftList.map(item => m("div",`${ItemData.items[item[0]].name} x ${item[1]}`)))
+/*			m("div", Object.keys(calcList.itemList).flatMap(item_id => [
+				m("div",`${ItemData.items[item_id].name}`),
+				...calcList.itemList[item_id].hqItems.map(hqitem => m("div",`${ItemData.items[hqitem[0]].name} = ${hqitem[1]}`))
+			])),*/
+			m("div",CraftList.flatMap((item,index,arr) => {
+
+				let row = [];
+
+				const makeDividerRow = (title) => row.push(m("div", `= ${title} `.padEnd(20,"=")));
+
+				if(item.id < 19){ // crystal
+					if(craft_category != "Crystal"){
+						craft_category = "Crystal"
+						makeDividerRow("Crystal")
+					}
+				}else if(!item.isCraft){ //gather
+					if(craft_category != "Gather"){
+						craft_category = "Gather"
+						makeDividerRow("Gather")
+					}
+				}else{
+					if(craft_category != item.index){
+						craft_category = item.index;
+						makeDividerRow(craft_category)
+					}
+				}
+
+				/*if(craft_category == "Gather" || craft_category == "Crystal"){
+					row.push(m("div",`${ItemData.items[item.id].name} x ${item.qty}`));
+				}else{
+					row.push(m("div",`#${item.index} ${ItemData.items[item.id].name} x ${item.qty}`));
+				}*/
+				
+				row.push(m("div",`${ItemData.items[item.id].name} x ${item.qty}`));
+
+				return row;
+			}))
 		]);
 	}
 }
@@ -282,7 +318,7 @@ function calculateHQItems(itemList, hqItemList, targetStartingQuality){
 		}
 
 		itemList[item_id] = {
-			qty: itemQtyToCraft,
+			qty: Number(itemQtyToCraft),
 			hqItems: subItemsToHQ.sort((a,b)=>a[0]-b[0]).sort((a,b)=>b[1]-a[1]),
 			canBeHq,
 			recipe,
@@ -352,9 +388,75 @@ function parseAllaganList(){
 }
 
 function parseListCode(code){
-	return code.split(";").reduce((acc,cur)=>{
+	return code.trim().split(";").reduce((acc,cur)=>{
+		if(cur=="") return acc;
+
 		cur = cur.split(",");
 		acc[Number(cur[0])] = cur[1];
 		return acc;
 	},{})
+}
+
+function calculateItemList(itemListData){
+	console.log(itemListData)
+	let itemsToCraft = itemListData.itemList;
+
+	let recipe_cost = {};
+	for(let item_id of Object.keys(itemsToCraft)){
+		let item  = itemsToCraft[item_id];
+
+		console.log(item)
+		calculateRecipeCost(item_id, item.qty, 0, recipe_cost);
+	}
+
+	//convert recipe cost in an sorted array
+	recipe_cost = Object.keys(recipe_cost).map(r=>({id:Number(r),...recipe_cost[r]}))
+		.sort((a, b) => a.id - b.id)
+		.sort((a, b) => b.index - a.index)
+		.sort((a, b) => a.isCraft - b.isCraft)
+
+	/*let gather_list = [];
+	let precraft_list = [];
+
+	for(let input_item of recipe_cost){
+
+		if(input_item.isCraft) precraft_list.push(input_item);
+		else gather_list.push(input_item);
+	}*/
+
+	
+	//return [...gather_list,...precraft_list];
+	return recipe_cost;
+}
+
+function calculateRecipeCost(item_id, qty, craft_depth = 0, recipe_cost = {}){
+	let item  = ItemData.items[item_id];
+	let recipe = item.recipes[0]; //TODO make recipe selector
+
+	console.log("Calculating recipe cost for", qty, "x", item.id, item.name);
+
+	//add items to recipe cost
+	!(item_id in recipe_cost) && (recipe_cost[item_id] = {
+		index: craft_depth,
+		qty: 0,
+		isCraft: false,
+	})
+
+	recipe_cost[item_id].qty += qty;
+	recipe_cost[item_id].index = Math.max(craft_depth, recipe_cost[item_id].index);
+
+	//check if craftable
+	if(recipe == undefined) return recipe_cost;
+
+	recipe_cost[item_id].outputQty = recipe.outputItem.qty;
+	recipe_cost[item_id].isCraft = true;
+	//let num_of_crafts = qty / recipe.outputItem.qty;
+
+	for(let input_item of recipe.inputItems){
+		console.log(input_item);
+
+		calculateRecipeCost(input_item.id, input_item.qty, craft_depth + 1, recipe_cost);
+	}
+
+	return recipe_cost
 }
