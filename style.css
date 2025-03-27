@@ -80,7 +80,7 @@ pre:has(code) button{
 }
 
 .loader {
-  font-family: 'Inconsolata', monospace;
+	font-family: 'Inconsolata', monospace;
 }
 
 .loader::before { /*From liam newmarch and 6's braille loader*/
@@ -121,4 +121,9 @@ td, th {
 .xivAppIcon{
 	font-family: 'FFXIVAppIcons';
 	font-size: 1.6rem;
+}
+
+.itemNameComponent{
+	cursor: copy;
+	user-select: none;
 }
