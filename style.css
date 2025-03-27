@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata&display=swap');
+@font-face {
+  font-family: FFXIVAppIcons;
+  src: url(static/FFXIVAppIcons.ttf);
+}
 
 body{
 	max-width: 100%;
@@ -27,10 +31,30 @@ body{
  	grid-area: craft;
 }
 
+pre{
+	width: 300px;
+	padding: 5px;
+}
+
 code{
+	width: 300px;
 	display:inline-block;
-	max-width: 300px;
 	overflow-x: hidden;
+	overflow-wrap: break-all;
+	word-wrap: break-all;
+	word-break: break-all;
+	hyphens: auto;
+}
+
+pre:has(code) {
+	position: relative;
+}
+
+pre:has(code) button{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	padding: 3px;
 }
 
 .addBtn:hover{
@@ -52,6 +76,7 @@ code{
 .inline > * {
 	display: inline-block;
 	width:auto;
+	vertical-align: middle;
 }
 
 .loader {
@@ -68,4 +93,32 @@ code{
   25% { content: '⠹' }
   50% { content: '⠼' }
   75% { content: '⠧' }
+}
+
+.inputItemCounter{
+	width: 40px;
+	min-width: 0px;
+	padding: 2px 5px;
+	margin-bottom: 0px;
+	margin-left: 5px;
+	text-align: right;
+}
+
+input[type="number"] {
+  -webkit-appearance: textfield;
+     -moz-appearance: textfield;
+          appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+}
+
+td, th {
+	padding: 0.1em;
+}
+
+.xivAppIcon{
+	font-family: 'FFXIVAppIcons';
+	font-size: 1.6rem;
 }
