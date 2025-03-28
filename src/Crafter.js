@@ -294,3 +294,11 @@ function parseListCode(code){
 		return acc;
 	},{})
 }
+
+/*const manualCodeImport = "46057,2;46058,2;46060,2;46061,2;46075,2;46080,2;46085,3;";
+ItemList = parseListCode(manualCodeImport);
+console.log(ItemList)
+updateItemList();*/
+
+/*ItemList = parseAllaganList();
+updateItemList();*/
