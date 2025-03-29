@@ -74,10 +74,10 @@ function updateCraftList(){
 	.value;
 }
 
-const manualCodeImport = "46033,4;46076,4;46040,4;46038,4;46020,4;46034,4;46067,4;46078,4;46031,4;46068,4";
+/*const manualCodeImport = "46033,4;46076,4;46040,4;46038,4;46020,4;46034,4;46067,4;46078,4;46031,4;46068,4";
 Item_List = parseListCode(manualCodeImport);
 console.log(Item_List)
-updateItemList();
+updateItemList();*/
 
 //== View ===================================================================
 const ItemNameComponent = (item_name) => m("div",{class:"itemNameComponent",onclick:()=>{navigator.clipboard.writeText(item_name)}},item_name);
