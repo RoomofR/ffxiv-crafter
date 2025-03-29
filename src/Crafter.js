@@ -62,7 +62,7 @@ export function searchItems(search_string){
 	return search_results;
 }
 
-export function updateItemListCode(item_list){
+export function generateItemListCode(item_list){
 	return Object.keys(item_list).map(id=>`${id},${item_list[id]};`).join("");
 }
 
@@ -285,7 +285,7 @@ function parseAllaganList(){
 	},{})
 }
 
-function parseListCode(code){
+export function parseListCode(code){
 	return code.trim().split(";").reduce((acc,cur)=>{
 		if(cur=="") return acc;
 
@@ -295,10 +295,7 @@ function parseListCode(code){
 	},{})
 }
 
-/*const manualCodeImport = "46057,2;46058,2;46060,2;46061,2;46075,2;46080,2;46085,3;";
-ItemList = parseListCode(manualCodeImport);
-console.log(ItemList)
-updateItemList();*/
+//46086,4;46061,4;46066,4;46082,4;46036,4;46062,4;46079,3;46035,4;46032,4;46084,4;46071,1
 
 /*ItemList = parseAllaganList();
 updateItemList();*/

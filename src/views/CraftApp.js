@@ -1,4 +1,4 @@
-import { searchItems, updateItemListCode, calculateItemList, calculateHQItems } from "../Crafter.js";
+import { searchItems, generateItemListCode, calculateItemList, calculateHQItems, parseListCode } from "../Crafter.js";
 import { Item_Data, Class_Job_Category, Craft_Job_Type, Job_Unicodes, pipe} from "../Data.js";
 
 //TODO Refactor into user interface and data
@@ -13,7 +13,7 @@ let Search_Results = [];
 let Search_String = "";
 
 let Item_List = JSON.parse(localStorage.getItem("ItemList")) || {};
-let Item_List_Code = updateItemListCode(Item_List) || "";
+let Item_List_Code = generateItemListCode(Item_List) || "";
 
 let Craft_List = [];
 updateCraftList();
@@ -63,7 +63,7 @@ function removeItem(item_id){
 function updateItemList(){
 	localStorage.setItem("ItemList", JSON.stringify(Item_List));
 
-	Item_List_Code = updateItemListCode(Item_List);
+	Item_List_Code = generateItemListCode(Item_List);
 	updateCraftList();
 }
 
@@ -73,6 +73,11 @@ function updateCraftList(){
 	.to(calculateItemList)
 	.value;
 }
+
+const manualCodeImport = "46033,4;46076,4;46040,4;46038,4;46020,4;46034,4;46067,4;46078,4;46031,4;46068,4";
+Item_List = parseListCode(manualCodeImport);
+console.log(Item_List)
+updateItemList();
 
 //== View ===================================================================
 const ItemNameComponent = (item_name) => m("div",{class:"itemNameComponent",onclick:()=>{navigator.clipboard.writeText(item_name)}},item_name);

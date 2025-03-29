@@ -118,6 +118,11 @@ td, th {
 	padding: 0.1em;
 }
 
+td{
+	width:0.1%;
+	white-space: nowrap;
+}
+
 .xivAppIcon{
 	font-family: 'FFXIVAppIcons';
 	font-size: 1.6rem;
