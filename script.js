@@ -3,7 +3,7 @@ import { CraftApp } from "./src/views/CraftApp.js";
 import { MBApp } from "./src/views/MBApp.js";
 
 var Root = document.body;
-m.route.prefix = "";
+m.route.prefix = "#";
 
 m.route(Root,"/",{
 	"/": CraftApp,
